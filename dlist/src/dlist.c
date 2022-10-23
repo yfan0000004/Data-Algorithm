@@ -3,58 +3,68 @@
 //创建链表
 struct list* list_creat(){
     struct list* node = (struct list*)malloc(sizeof(struct list));
+    node->val = -1;
     node->prev = NULL;
     node->next = NULL;
     return node;
-}
-
-/*
-struct list* list_creat(int val){
-    struct list* node = (struct list*)malloc(sizeof(struct list));
-    node->val = val;
-    node->prev = NULL;
-    node->next = NULL;
-    return node;
-}*/
-
-void list_creat(struct list *list){
-    return;
 }
 
 //头插法插入元素
-void list_add(struct list* list, struct list* new_item){
+void list_addAtHead(struct list* list, int val){
+    struct list* cur = (struct list*)malloc(sizeof(struct list));
     struct list* head = list;
-    //struct list* cur = (struct list*)malloc(sizeof(struct list));
-    new_item->next = head->next;
-    new_item->prev = head;
-    head->next = new_item;
-    if(new_item->next != NULL) new_item->next->cur = new_item;
+    cur->val = val;
+    cur->next = head->next;
+    cur->prev = head;
+    head->next = cur;
+    if(cur->next != NULL) cur->next->prev = cur;
     return;
 }
 
-//删除整个链表
-void list_delete(struct list *item){
-    while(item->next != NULL){
-        struct list* head = item;
-        item = item->next;
-        free(head);
-    }
-    free(item);
+//尾插法插入元素
+void list_addAtTail(struct list* list, int val){
+    struct list* node = (struct list*)malloc(sizeof(struct list));
+    struct list* cur = list;
+    while(cur->next != NULL)
+        cur = cur->next;
+    cur->next = node;
+    node->prev = cur;
+    node->next = NULL;
+    return;
 }
 
-//判断链表是否为空 1为空 0不为空
-int list_is_empty(struct list *list){
-    if(list == NULL) return 1;
-    return 0; 
+//删除链表尾部元素
+void list_deleteAtTail(struct list *list){
+    struct list* cur = list;
+    while(cur->next != NULL)
+        cur = cur->next;
+    struct list* deleteNode = cur;
+    cur->prev->next = NULL;
+    cur->prev = NULL;
+    free(deleteNode);
 }
 
-//连接两个链表
+/*/连接两个链表
 struct list* list_splice(struct list *dst, struct list *src){
     struct list* head = dst;
-    while(dst->next != NULL){
-        dst = dst->next;
+    while(head->next != NULL){
+        head = head->next;
     }
-    dst-next = src;
-    src-prev = dst;
-    return head;
+    printf("当前节点的值：%d\n", head->val);
+    head->next = src;
+    src->prev = head;
+    return dst;
+}*/
+
+void printList(struct list *list){
+    if(list->next != NULL){
+        while(list->next != NULL){
+            list = list->next;
+            printf(" %d -> ",list->val);
+         }
+         printf(" NULL\n");
+    } 
+    else{
+        printf("empty\n");
+    }
 }
